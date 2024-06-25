@@ -1,0 +1,17 @@
+.footer {
+  padding-block: 60px;
+}
+
+.footer__text {
+  font-size: 18px;
+  color: #545454;
+}
+
+@media screen and (max-width: 640px) {
+  .footer {
+    padding-block: 36px;
+  }
+  .footer__text {
+    font-size: 14px;
+  }
+}

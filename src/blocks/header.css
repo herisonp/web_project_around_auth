@@ -1,0 +1,18 @@
+.header {
+  padding-block: 40px;
+  border-bottom: 1px solid hsl(0, 0%, 33%);
+  display: flex;
+}
+
+.header__logo {
+  width: 173px;
+}
+
+@media screen and (max-width: 640px) {
+  .header {
+    padding-block: 28px;
+  }
+  .header__logo {
+    width: 126px;
+  }
+}

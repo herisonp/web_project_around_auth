@@ -1,0 +1,114 @@
+.posts {
+  width: 100%;
+}
+
+.posts__empty-text {
+  color: #ffffff;
+  text-align: center;
+}
+
+.posts__empty-text_hidden {
+  display: none;
+}
+
+.posts__list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  list-style: none;
+  gap: 16px;
+}
+
+.posts__item {
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.posts__trash-btn {
+  position: absolute;
+  z-index: 1;
+  background-color: transparent;
+  border: none;
+  background-image: url("../images/trash-icon.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  right: 15px;
+  top: 15px;
+  transition: all 0.1s ease-in;
+}
+.posts__trash-btn:hover {
+  opacity: 0.8;
+}
+
+.posts__trash-btn_hidden {
+  display: none;
+}
+
+.posts__image-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  overflow: hidden;
+}
+.posts__image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  z-index: 0;
+}
+.posts__image:hover {
+  transform: scale(1.2);
+}
+
+.posts__description {
+  background-color: #fff;
+  padding: 25px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.posts__title {
+  font-size: 24px;
+  font-weight: 900;
+  flex: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.posts__like-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.posts__btn-like {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  background-image: url("../images/like-icon-disabled.svg");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.posts__btn-like:hover {
+  opacity: 0.5;
+}
+.posts__btn-like_actived {
+  background-image: url("../images/like-icon-actived.svg");
+}
+
+@media screen and (max-width: 640px) {
+  .posts__list {
+    grid-template-columns: 1fr;
+  }
+}
