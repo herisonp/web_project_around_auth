@@ -2,8 +2,6 @@
 
 Bootcamp Desenvolvimento Web - TripleTen
 
-- <a href="https://herisonp.github.io/web_project_around_react/" target="_blank">Veja o deploy</a>
-
 ## 👁 Preview
 
 <p align="center">
@@ -22,6 +20,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - POO (Programação orientada a Objeto)
 - Webpack, Babel e PostCSS
 - Consumo de API
+- Autenticação no frontend, JWT
 - Git e GitHub
 - Metodoliga BEM
 
