@@ -88,3 +88,13 @@ export const validateOptions = {
   errorClass: "popup__error",
   errorClassVisible: "popup__error_visible",
 };
+
+export const validateOptionsAuth = {
+  formSelector: ".auth__form",
+  inputSelector: ".auth__input",
+  submitButtonSelector: ".auth__button",
+  inactiveButtonClass: "auth__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error",
+  errorClassVisible: "popup__error_visible",
+};
