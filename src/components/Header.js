@@ -37,10 +37,10 @@ export default function Header({ loggedIn, handleLogout }) {
           </>
         ) : (
           <Link
-            to={links[pathname].to || links["/register"].to}
+            to={links[pathname] ? links[pathname].to : links["/register"].to}
             className="header__link"
           >
-            {links[pathname].label || links["/register"].label}
+            {links[pathname] ? links[pathname].label : links["/register"].label}
           </Link>
         )}
       </div>
