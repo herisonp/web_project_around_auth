@@ -2,10 +2,37 @@
   padding-block: 40px;
   border-bottom: 1px solid hsl(0, 0%, 33%);
   display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header__logo {
   width: 173px;
+}
+
+.header__infos {
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header__btn-logout {
+  background-color: transparent;
+  padding: 4px;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+}
+
+.header__btn-logout:hover {
+  opacity: 0.8;
+}
+
+.header__link {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 18px;
 }
 
 @media screen and (max-width: 640px) {

@@ -53,12 +53,11 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    getInitialCardsData();
     getUserInfo();
-    handleCkeckToken();
+    getInitialCardsData();
   }, []);
 
-  async function handleCkeckToken() {
+  async function handleCheckToken() {
     const token = localStorage.getItem("jwt");
 
     if (!token) {
@@ -73,11 +72,26 @@ function App() {
       return;
     }
     handleLogin();
+    return data;
   }
 
   // user method
-  function getUserInfo() {
-    api.getUserInfo().then(setCurrentUser).catch(console.log);
+  async function getUserInfo() {
+    const dataToken = await handleCheckToken();
+
+    if (!dataToken) {
+      return;
+    }
+
+    api
+      .getUserInfo()
+      .then((data) => {
+        setCurrentUser({
+          ...data,
+          email: dataToken.email,
+        });
+      })
+      .catch(console.log);
   }
 
   // cards methods
