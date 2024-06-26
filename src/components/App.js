@@ -1,22 +1,34 @@
 // react and libs
 import { useEffect, useState } from "react";
+import {
+  Route,
+  Switch,
+  withRouter,
+  useHistory,
+  Redirect,
+} from "react-router-dom";
 
 // utils
 import api from "../utils/api";
+import * as auth from "../utils/auth";
 
 // components
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
+import Login from "./Login";
+import Register from "./Register";
+import ProtectedRoute from "./ProtectedRoute";
 // poups components
 import ImagePopup from "./ImagePopup";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
+import ConfirmationPopup from "./ConfirmationPopup";
+import AddPlacePopup from "./AddPlacePopup";
 
 // contexts
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import AddPlacePopup from "./AddPlacePopup";
-import ConfirmationPopup from "./ConfirmationPopup";
+import InfoToolTip from "./InfoToolTip";
 
 function App() {
   // popup states
@@ -24,6 +36,12 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = useState(false);
+  const [infoToolTipPopup, setInfoToolTipPopup] = useState({
+    type: "",
+    message: "",
+    isOpen: false,
+    onClose: () => {},
+  });
 
   // cards states
   const [selectedCard, setSelectedCard] = useState({});
@@ -32,11 +50,30 @@ function App() {
 
   // current user state
   const [currentUser, setCurrentUser] = useState({});
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     getInitialCardsData();
     getUserInfo();
+    handleCkeckToken();
   }, []);
+
+  async function handleCkeckToken() {
+    const token = localStorage.getItem("jwt");
+
+    if (!token) {
+      handleLogout();
+      return;
+    }
+
+    const res = await auth.checkToken(token);
+    const { data } = await res.json();
+    if (!data) {
+      handleLogout();
+      return;
+    }
+    handleLogin();
+  }
 
   // user method
   function getUserInfo() {
@@ -85,11 +122,31 @@ function App() {
     setIsConfirmationPopupOpen(true);
     setSelectedCardDelete(card);
   }
+  function handleInfoToolTipPopup({ type, message }, onClose) {
+    const infos = {
+      type,
+      message,
+      isOpen: true,
+      onClose: () => {},
+    };
+
+    if (onClose) {
+      infos.onClose = onClose;
+    }
+
+    setInfoToolTipPopup(infos);
+  }
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsConfirmationPopupOpen(false);
+    setInfoToolTipPopup({
+      type: "",
+      message: "",
+      isOpen: false,
+      onClose: () => {},
+    });
     setSelectedCard({});
     setSelectedCardDelete({});
   }
@@ -133,19 +190,51 @@ function App() {
     });
   }
 
+  function handleLogout() {
+    localStorage.removeItem("jwt");
+    setLoggedIn(false);
+  }
+
+  function handleLogin() {
+    setLoggedIn(true);
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
-        <Main
-          onAddPlaceClick={handleAddPlaceClick}
-          onEditAvatarClick={handleEditAvatarClick}
-          onEditProfileClick={handleEditProfileClick}
-          onCardClick={handleCardClick}
-          onCardDelete={handleConfirmationClick}
-          onCardLike={handleCardLike}
-          cards={cards}
-        />
+        <Header loggedIn={loggedIn} handleLogout={handleLogout} />
+        <main className="main container">
+          <Switch>
+            <Route path="/login">
+              <Login
+                handleLogin={handleLogin}
+                loggedIn={loggedIn}
+                handleInfoToolTip={handleInfoToolTipPopup}
+              />
+            </Route>
+            <Route path="/register">
+              <Register
+                loggedIn={loggedIn}
+                handleInfoToolTip={handleInfoToolTipPopup}
+              />
+            </Route>
+            <ProtectedRoute exact path="/" loggedIn={loggedIn}>
+              <Main
+                onAddPlaceClick={handleAddPlaceClick}
+                onEditAvatarClick={handleEditAvatarClick}
+                onEditProfileClick={handleEditProfileClick}
+                onCardClick={handleCardClick}
+                onCardDelete={handleConfirmationClick}
+                onCardLike={handleCardLike}
+                cards={cards}
+              />
+            </ProtectedRoute>
+            <Route path="*">
+              <Redirect to="/login" />
+            </Route>
+          </Switch>
+        </main>
+
         <Footer />
       </div>
 
@@ -174,8 +263,18 @@ function App() {
         onClose={closeAllPopups}
         onConfirmationSubmit={handleConfirmationSumit}
       />
+
+      <InfoToolTip
+        type={infoToolTipPopup.type}
+        message={infoToolTipPopup.message}
+        isOpen={infoToolTipPopup.isOpen}
+        onClose={() => {
+          infoToolTipPopup.onClose();
+          closeAllPopups();
+        }}
+      />
     </CurrentUserContext.Provider>
   );
 }
 
-export default App;
+export default withRouter(App);

@@ -18,7 +18,7 @@ export default function Main({
   const currentUser = useContext(CurrentUserContext);
 
   return (
-    <main className="main container">
+    <>
       <section className="profile">
         <div className="profile__avatar-wrapper">
           <button
@@ -74,6 +74,6 @@ export default function Main({
           <p className="posts__empty-text">Adicione seu primeiro post...</p>
         )}
       </section>
-    </main>
+    </>
   );
 }
