@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import iconClose from "../images/close-icon.svg";
+import iconSuccess from "../images/success-icon.svg";
+import iconError from "../images/error-icon.svg";
 
 export default function InfoToolTip({
   isOpen,
@@ -11,6 +13,11 @@ export default function InfoToolTip({
   const [message, setMessage] = useState("");
   const [open, setOpen] = useState(false);
   const overlay = useRef();
+
+  const typesIcon = {
+    error: iconError,
+    success: iconSuccess,
+  };
 
   useEffect(() => {
     setOpen(isOpen);
@@ -54,8 +61,10 @@ export default function InfoToolTip({
             className="popup__close-icon"
           />
         </button>
-        {/* icone do tipo de mensagem */} {type}
-        <h2 className="popup__title">{message}</h2>
+        {typesIcon[type] && (
+          <img src={typesIcon[type]} alt="" className="popup__info-icon" />
+        )}
+        <h2 className="popup__title popup__title-info">{message}</h2>
       </div>
     </div>
   );

@@ -72,6 +72,16 @@
   font-weight: 900;
 }
 
+.popup__title-info {
+  text-align: center;
+}
+
+.popup__info-icon {
+  margin: 0 auto;
+  width: 120px;
+  height: 120px;
+}
+
 .popup__form {
   display: flex;
   flex-direction: column;
