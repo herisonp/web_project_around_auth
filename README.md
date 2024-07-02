@@ -8,6 +8,14 @@ Bootcamp Desenvolvimento Web - TripleTen
   <img alt="Projeto Homeland - TripleTen" src=".github/thumbnail.jpg" width="100%">
 </p>
 
+## Deploy
+
+https://around.herisonpereira.com.br
+
+## Repositório do backend
+
+https://github.com/herisonp/web_project_api_full
+
 ## 🚀 Tecnologias
 
 Esse projeto foi desenvolvido com as seguintes tecnologias:
@@ -33,7 +41,6 @@ Projeto criado durante o bootcamp de desenvolvimento web da TripleTen.
 Algumas melhorias que podem ser aplicadas:
 
 - Animação em alguns elementos da página para deixar mais dinâmico e interativo
-- Salvar alterações do usuário no browser
 
 ## ⚙ Instruções para rodar local
 
