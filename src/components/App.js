@@ -1,12 +1,6 @@
 // react and libs
 import { useEffect, useState } from "react";
-import {
-  Route,
-  Switch,
-  withRouter,
-  useHistory,
-  Redirect,
-} from "react-router-dom";
+import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 
 // utils
 import api from "../utils/api";
@@ -51,59 +45,71 @@ function App() {
   // current user state
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
+  const [currentToken, setCurrentToken] = useState("");
 
   useEffect(() => {
-    getUserInfo();
-    getInitialCardsData();
+    function handleCheckToken() {
+      const token = auth.getToken();
+      if (!token) {
+        handleLogout();
+        setCurrentToken("");
+        return;
+      }
+
+      setCurrentToken(token);
+
+      auth
+        .checkToken(token)
+        .then((res) => res.json())
+        .then(({ data }) => {
+          if (!data) {
+            handleLogout();
+            return;
+          }
+          handleLogin();
+        });
+    }
+
+    handleCheckToken();
   }, []);
 
-  async function handleCheckToken() {
-    const token = localStorage.getItem("jwt");
-
-    if (!token) {
-      handleLogout();
+  useEffect(() => {
+    if (!loggedIn) {
+      setCurrentToken("");
       return;
     }
 
-    const res = await auth.checkToken(token);
-    const { data } = await res.json();
-    if (!data) {
-      handleLogout();
-      return;
-    }
-    handleLogin();
-    return data;
-  }
+    const token = auth.getToken();
+    setCurrentToken(token);
 
-  // user method
-  async function getUserInfo() {
-    const dataToken = await handleCheckToken();
-
-    if (!dataToken) {
-      return;
-    }
-
-    api
+    // buscar info do usuario
+    api(token)
       .getUserInfo()
-      .then((data) => {
-        setCurrentUser({
-          ...data,
-          email: dataToken.email,
-        });
-      })
-      .catch(console.log);
-  }
+      .then(({ data }) => {
+        if (!data) {
+          return;
+        }
+        setCurrentUser(data);
+      });
+
+    // buscar cards iniciais
+    api(token)
+      .getInitialCards()
+      .then(({ data }) => {
+        if (!data) {
+          return;
+        }
+        setCards(data);
+      });
+  }, [loggedIn]);
 
   // cards methods
-  function getInitialCardsData() {
-    api.getInitialCards().then(setCards).catch(console.log);
-  }
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
 
-    api
+    api(currentToken)
       .changeLikeCardStatus(card._id, !isLiked)
-      .then((newCard) => {
+      .then(({ data: newCard }) => {
         setCards((state) =>
           state.map((c) => (c._id === card._id ? newCard : c))
         );
@@ -111,7 +117,7 @@ function App() {
       .catch(console.log);
   }
   function handleCardDelete(card) {
-    return api
+    return api(currentToken)
       .deleteCardById(card._id)
       .then(() => {
         setCards((state) => state.filter((c) => c._id !== card._id));
@@ -167,18 +173,18 @@ function App() {
 
   // submits methods
   function handleUpdateUser(user) {
-    return api
+    return api(currentToken)
       .editUser(user)
-      .then((data) => {
+      .then(({ data }) => {
         setCurrentUser(data);
         closeAllPopups();
       })
       .catch(console.log);
   }
   function handleUpdateAvatar(user) {
-    return api
+    return api(currentToken)
       .editAvatar({ avatar: user.avatar })
-      .then((data) => {
+      .then(({ data }) => {
         setCurrentUser({
           ...currentUser,
           avatar: data.avatar,
@@ -188,9 +194,9 @@ function App() {
       .catch(console.log);
   }
   function handleAddPlaceSubmit(post, form) {
-    return api
+    return api(currentToken)
       .postCard(post)
-      .then((data) => {
+      .then(({ data }) => {
         setCards([data, ...cards]);
         closeAllPopups();
         form.reset();

@@ -30,7 +30,7 @@ export default function Header({ loggedIn, handleLogout }) {
       <div className="header__infos">
         {loggedIn ? (
           <>
-            <span>{currentUser.email}</span>
+            <span>{currentUser?.email}</span>
             <button className="header__btn-logout" onClick={handleClickLogout}>
               sair
             </button>

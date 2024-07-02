@@ -31,14 +31,14 @@ export default function Main({
             />
           </button>
           <img
-            src={currentUser.avatar ? currentUser.avatar : imageFallback}
+            src={currentUser?.avatar ? currentUser.avatar : imageFallback}
             className="profile__avatar"
             alt="Imagem de avatar do usuário"
           />
         </div>
         <div className="profile__info">
           <div className="profile__name-wrapper">
-            <h1 className="profile__name">{currentUser.name}</h1>
+            <h1 className="profile__name">{currentUser?.name}</h1>
             <button
               id="edit-profile"
               className="button profile__btn-edit popup-trigger"
@@ -47,7 +47,7 @@ export default function Main({
               <img src={iconEdit} alt="Ícone do botão de editar perfil" />
             </button>
           </div>
-          <p className="profile__about">{currentUser.about}</p>
+          <p className="profile__about">{currentUser?.about}</p>
         </div>
         <button
           id="add-place"
@@ -59,18 +59,19 @@ export default function Main({
       </section>
 
       <section className="posts">
-        <ul className="posts__list">
-          {cards.map((card) => (
-            <Card
-              key={card._id}
-              card={card}
-              onCardClick={onCardClick}
-              onCardLike={onCardLike}
-              onCardDelete={onCardDelete}
-            />
-          ))}
-        </ul>
-        {cards.length <= 0 && (
+        {cards && cards.length > 0 ? (
+          <ul className="posts__list">
+            {cards.map((card) => (
+              <Card
+                key={card._id}
+                card={card}
+                onCardClick={onCardClick}
+                onCardLike={onCardLike}
+                onCardDelete={onCardDelete}
+              />
+            ))}
+          </ul>
+        ) : (
           <p className="posts__empty-text">Adicione seu primeiro post...</p>
         )}
       </section>

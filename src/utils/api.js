@@ -34,7 +34,7 @@ class Api {
   }
 
   changeLikeCardStatus(id, isLiked) {
-    return this._makeRequest(`/cards/likes/${id}`, isLiked ? "PUT" : "DELETE");
+    return this._makeRequest(`/cards/${id}/likes/`, isLiked ? "PUT" : "DELETE");
   }
 
   getUserInfo() {
@@ -50,11 +50,14 @@ class Api {
   }
 }
 
-const api = new Api("https://around.nomoreparties.co/v1/web_ptbr_09", {
-  headers: {
-    authorization: "1146a04f-7181-45eb-9b96-3a5b76f79b15",
-    "Content-Type": "application/json",
-  },
-});
+const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3000";
+
+const api = (token) =>
+  new Api(BASE_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
 
 export default api;

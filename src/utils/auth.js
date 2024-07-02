@@ -1,4 +1,4 @@
-const BASE_URL = "http://register.nomoreparties.co";
+const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3000";
 
 export const register = async ({ email, password }) => {
   return fetch(`${BASE_URL}/signup`, {
@@ -29,4 +29,8 @@ export const checkToken = async (token) => {
       Authorization: `Bearer ${token}`,
     },
   });
+};
+
+export const getToken = () => {
+  return localStorage.getItem("jwt");
 };
